@@ -43,6 +43,28 @@ if (Sys.info()['sysname'] == 'Darwin') {
 
     return(path)
   }
+} else if (Sys.info()['sysname'] == 'Linux') {
+  choose.dir = function(default = NA, caption = NA) {
+    command = 'zenity'
+    args = '--file-selection --directory --title="Choose a folder"'
+    
+    suppressWarnings({
+      path = system2(command, args = args, stderr = TRUE)
+    })
+    
+    #Return NA if user hits cancel
+    if (!is.null(attr(path, 'status')) && attr(path, 'status')) {
+      # user canceled
+      return(default)
+    }
+    
+    #Error: Gtk-Message: GtkDialog mapped without a transient parent
+    if(length(path) == 2){
+      path = path[2]
+    }
+    
+    return(path)
+  }
 }
 
 #' Directory Selection Control
