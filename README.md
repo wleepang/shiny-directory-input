@@ -7,6 +7,7 @@ A widget for interactive selection of directories for R Shiny Applications
 Provides an input for users to select directories via an interactive, and os native 
 dialog, rather than having to type in paths in a `textInput()`.
 
+> **NOTE**: This is intended to only be used with _locally run_ shiny applications.  It will not work on server deployed applications because it uses OS shell calls to present a directory choosing dialog.  There is currently no way (that I'm aware) of _securely_ presenting a client side directory selection dialog from a hosted web application.
 
 # Run the demo
 Install the `shiny` R-package from CRAN:
