@@ -39,6 +39,9 @@ if (Sys.info()['sysname'] == 'Darwin') {
     if (!is.null(attr(path, 'status')) && attr(path, 'status')) {
       # user canceled
       path = NA
+    } else {
+      # cut any extra output lines, like "Class FIFinderSyncExtensionHost ..."
+      path = tail(path, n=1)
     }
 
     return(path)
@@ -47,22 +50,22 @@ if (Sys.info()['sysname'] == 'Darwin') {
   choose.dir = function(default = NA, caption = NA) {
     command = 'zenity'
     args = '--file-selection --directory --title="Choose a folder"'
-    
+
     suppressWarnings({
       path = system2(command, args = args, stderr = TRUE)
     })
-    
+
     #Return NA if user hits cancel
     if (!is.null(attr(path, 'status')) && attr(path, 'status')) {
       # user canceled
       return(default)
     }
-    
+
     #Error: Gtk-Message: GtkDialog mapped without a transient parent
     if(length(path) == 2){
       path = path[2]
     }
-    
+
     return(path)
   }
 }
