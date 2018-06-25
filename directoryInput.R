@@ -1,15 +1,17 @@
-#' Choose a Folder Interactively (Mac OS X)
+#' Choose a Folder Interactively
 #'
-#' Display a folder selection dialog under Mac OS X
+#' Display an OS-native folder selection dialog under Mac OS X, Linux GTK+ or
+#' Windows.
 #'
 #' @param default which folder to show initially
 #' @param caption the caption on the selection dialog
 #'
 #' @details
-#' Uses an Apple Script to display a folder selection dialog.  With \code{default = NA},
-#' the initial folder selection is determined by default behavior of the
-#' "choose folder" Apple Script command.  Otherwise, paths are expanded with
-#' \link{path.expand}.
+#' Uses an Apple Script, Zenity or R \code{\link{tcltk}} library to display an
+#' OS-native folder selection dialog.
+#' For Apple Script, with \code{default = NA}, the initial folder selection
+#' is determined by default behavior of the "choose folder" script. Otherwise,
+#' paths are expanded with \link{path.expand}.
 #'
 #' @return
 #' A length one character vector, character NA if 'Cancel' was selected.
@@ -68,6 +70,8 @@ if (Sys.info()['sysname'] == 'Darwin') {
 
     return(path)
   }
+} else if (Sys.info()['sysname'] == 'Windows') {
+  choose.dir = tcltk::tk_choose.dir
 }
 
 #' Directory Selection Control
