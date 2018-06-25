@@ -7,11 +7,14 @@
 #' @param caption the caption on the selection dialog
 #'
 #' @details
-#' Uses an Apple Script, Zenity or R \code{\link{tcltk}} library to display an
-#' OS-native folder selection dialog.
+#' Uses an Apple Script, Zenity or Windows Batch script to display an OS-native
+#' folder selection dialog.
+#'
 #' For Apple Script, with \code{default = NA}, the initial folder selection
 #' is determined by default behavior of the "choose folder" script. Otherwise,
 #' paths are expanded with \link{path.expand}.
+#'
+#' For Windows Batch script the initial folder is always ignored.
 #'
 #' @return
 #' A length one character vector, character NA if 'Cancel' was selected.
@@ -71,7 +74,17 @@ if (Sys.info()['sysname'] == 'Darwin') {
     return(path)
   }
 } else if (Sys.info()['sysname'] == 'Windows') {
-  choose.dir = tcltk::tk_choose.dir
+  # Use batch script to circumvent issue w/ `choose.dir`/`tcltk::tk_choose.dir`
+  # window popping out unnoticed in the back of the current window
+  choose.dir = function(default = NA, caption = NA) {
+      command = file.path('utils','choose_dir.bat')
+      args = if (is.na(caption)) '' else caption
+      suppressWarnings({
+        path = system2(command, args = args, stdout = TRUE)
+      })
+      if (path == 'NONE') path = NA
+      return(path)
+  }
 }
 
 #' Directory Selection Control
