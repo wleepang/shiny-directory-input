@@ -16,7 +16,7 @@ set "psCommand="(new-object -COM 'Shell.Application')^
 
 for /f "usebackq delims=" %%I in (`powershell %psCommand%`) do set "folder=%%I"
 
-if -%folder%-==-- set "folder=NONE"
+if "-%folder%-"=="--" set "folder=NONE"
 
 setlocal enabledelayedexpansion
 echo !folder!
