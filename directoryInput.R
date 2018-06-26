@@ -1,15 +1,20 @@
-#' Choose a Folder Interactively (Mac OS X)
+#' Choose a Folder Interactively
 #'
-#' Display a folder selection dialog under Mac OS X
+#' Display an OS-native folder selection dialog under Mac OS X, Linux GTK+ or
+#' Windows.
 #'
 #' @param default which folder to show initially
 #' @param caption the caption on the selection dialog
 #'
 #' @details
-#' Uses an Apple Script to display a folder selection dialog.  With \code{default = NA},
-#' the initial folder selection is determined by default behavior of the
-#' "choose folder" Apple Script command.  Otherwise, paths are expanded with
-#' \link{path.expand}.
+#' Uses an Apple Script, Zenity or Windows Batch script to display an OS-native
+#' folder selection dialog.
+#'
+#' For Apple Script, with \code{default = NA}, the initial folder selection
+#' is determined by default behavior of the "choose folder" script. Otherwise,
+#' paths are expanded with \link{path.expand}.
+#'
+#' For Windows Batch script the initial folder is always ignored.
 #'
 #' @return
 #' A length one character vector, character NA if 'Cancel' was selected.
@@ -39,6 +44,9 @@ if (Sys.info()['sysname'] == 'Darwin') {
     if (!is.null(attr(path, 'status')) && attr(path, 'status')) {
       # user canceled
       path = NA
+    } else {
+      # cut any extra output lines, like "Class FIFinderSyncExtensionHost ..."
+      path = tail(path, n=1)
     }
 
     return(path)
@@ -47,23 +55,35 @@ if (Sys.info()['sysname'] == 'Darwin') {
   choose.dir = function(default = NA, caption = NA) {
     command = 'zenity'
     args = '--file-selection --directory --title="Choose a folder"'
-    
+
     suppressWarnings({
       path = system2(command, args = args, stderr = TRUE)
     })
-    
+
     #Return NA if user hits cancel
     if (!is.null(attr(path, 'status')) && attr(path, 'status')) {
       # user canceled
       return(default)
     }
-    
+
     #Error: Gtk-Message: GtkDialog mapped without a transient parent
     if(length(path) == 2){
       path = path[2]
     }
-    
+
     return(path)
+  }
+} else if (Sys.info()['sysname'] == 'Windows') {
+  # Use batch script to circumvent issue w/ `choose.dir`/`tcltk::tk_choose.dir`
+  # window popping out unnoticed in the back of the current window
+  choose.dir = function(default = NA, caption = NA) {
+      command = file.path('utils','choose_dir.bat')
+      args = if (is.na(caption)) '' else sprintf('"%s"', caption)
+      suppressWarnings({
+        path = system2(command, args = args, stdout = TRUE)
+      })
+      if (path == 'NONE') path = NA
+      return(path)
   }
 }
 
