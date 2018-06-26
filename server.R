@@ -17,7 +17,8 @@ shinyServer(function(input, output, session) {
       if (input$directory > 0) {
         # condition prevents handler execution on initial app launch
 
-        path = choose.dir(default = readDirectoryInput(session, 'directory'))
+        path = choose.dir(default = readDirectoryInput(session, 'directory'),
+          caption="Choose a directory...")
         updateDirectoryInput(session, 'directory', value = path)
       }
     }

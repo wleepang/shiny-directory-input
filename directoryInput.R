@@ -78,7 +78,7 @@ if (Sys.info()['sysname'] == 'Darwin') {
   # window popping out unnoticed in the back of the current window
   choose.dir = function(default = NA, caption = NA) {
       command = file.path('utils','choose_dir.bat')
-      args = if (is.na(caption)) '' else caption
+      args = if (is.na(caption)) '' else sprintf('"%s"', caption)
       suppressWarnings({
         path = system2(command, args = args, stdout = TRUE)
       })
