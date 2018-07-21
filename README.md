@@ -45,7 +45,25 @@ directoryInput('directory', label = 'select a directory', value = '~')
 
 
 ### In `server.R`:
-* Observe when a user clicks the `...` button to select a new directory
+* **Important**: Pass `session` into the server, it is used to communicate with the client-side widget
+```
+shinyServer(function(input, output, session) {
+  # ...
+}
+```
+
+* Invoke the dialog
+```
+path = readDirectoryInput(session, 'directory')
+```
+
+* Update the widget value
+```
+path = 'path/to/directory'
+updateDirectoryInput(session, 'directory', value = path)
+```
+
+* Example: Observe when a user clicks the `...` button to select a new directory
 ```r
 observeEvent(
   ignoreNULL = TRUE,
