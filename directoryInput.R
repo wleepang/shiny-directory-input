@@ -54,7 +54,15 @@ if (Sys.info()['sysname'] == 'Darwin') {
 } else if (Sys.info()['sysname'] == 'Linux') {
   choose.dir = function(default = NA, caption = NA) {
     command = 'zenity'
-    args = '--file-selection --directory --title="Choose a folder"'
+    args = '--file-selection --directory'
+
+    if (!is.null(default) && !is.na(default) && nzchar(default)) {
+      args = paste(args, sprintf('--default="%s"', default)
+    }
+
+    if (!is.null(caption) && !is.na(caption) && nzchar(caption)) {
+      args = paste(args, sprintf('--title="%s"', caption)
+    }
 
     suppressWarnings({
       path = system2(command, args = args, stderr = TRUE)
@@ -67,8 +75,8 @@ if (Sys.info()['sysname'] == 'Darwin') {
     }
 
     #Error: Gtk-Message: GtkDialog mapped without a transient parent
-    if(length(path) == 2){
-      path = path[2]
+    if(length(path) > 1){
+      path = path[(length(path)-1)]
     }
 
     return(path)
