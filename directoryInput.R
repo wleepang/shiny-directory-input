@@ -57,11 +57,11 @@ if (Sys.info()['sysname'] == 'Darwin') {
     args = '--file-selection --directory'
 
     if (!is.null(default) && !is.na(default) && nzchar(default)) {
-      args = paste(args, sprintf('--default="%s"', default)
+      args = paste(args, sprintf('--default="%s"', default))
     }
 
     if (!is.null(caption) && !is.na(caption) && nzchar(caption)) {
-      args = paste(args, sprintf('--title="%s"', caption)
+      args = paste(args, sprintf('--title="%s"', caption))
     }
 
     suppressWarnings({
@@ -71,7 +71,7 @@ if (Sys.info()['sysname'] == 'Darwin') {
     #Return NA if user hits cancel
     if (!is.null(attr(path, 'status')) && attr(path, 'status')) {
       # user canceled
-      return(default)
+      return(NA)
     }
 
     #Error: Gtk-Message: GtkDialog mapped without a transient parent
@@ -85,6 +85,16 @@ if (Sys.info()['sysname'] == 'Darwin') {
   # Use batch script to circumvent issue w/ `choose.dir`/`tcltk::tk_choose.dir`
   # window popping out unnoticed in the back of the current window
   choose.dir = function(default = NA, caption = NA) {
+    #powershell -NoProfile -ExecutionPolicy Bypass -File newFolderDialog.ps1 -caption test -default c:\Users
+      command = 'powershell'
+      args = paste('-NoProfile -ExecutionPolicy Bypass -File',file.path('utils','newFolderDialog.ps1'))
+      if (!is.null(default) && !is.na(default) && nzchar(default)) {
+        args = paste(args, sprintf('-default="%s"', default))
+      }
+
+      if (!is.null(caption) && !is.na(caption) && nzchar(caption)) {
+        args = paste(args, sprintf('-caption="%s"', caption))
+      }
       command = file.path('utils','choose_dir.bat')
       args = if (is.na(caption)) '' else sprintf('"%s"', caption)
       suppressWarnings({
