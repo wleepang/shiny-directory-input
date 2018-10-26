@@ -84,22 +84,30 @@ if (Sys.info()['sysname'] == 'Darwin') {
 } else if (Sys.info()['sysname'] == 'Windows') {
   # Use batch script to circumvent issue w/ `choose.dir`/`tcltk::tk_choose.dir`
   # window popping out unnoticed in the back of the current window
-  choose.dir = function(default = NA, caption = NA) {
-    #powershell -NoProfile -ExecutionPolicy Bypass -File newFolderDialog.ps1 -caption test -default c:\Users
+  choose.dir = function(default = NA, caption = NA, useNew = TRUE) {
+    if(useNew){
+      ## uses a powershell script rather than the bat version, gives a nicer interface
+      ## and allows setting of the default directory and the caption
       command = 'powershell'
       args = paste('-NoProfile -ExecutionPolicy Bypass -File',file.path('utils','newFolderDialog.ps1'))
       if (!is.null(default) && !is.na(default) && nzchar(default)) {
-        args = paste(args, sprintf('-default="%s"', default))
+        args = paste(args, sprintf('-default "%s"', normalizePath(default)))
       }
 
       if (!is.null(caption) && !is.na(caption) && nzchar(caption)) {
-        args = paste(args, sprintf('-caption="%s"', caption))
+        args = paste(args, sprintf('-caption "%s"', caption))
       }
+      
+      suppressWarnings({
+        path = system2(command, args = args, stdout = TRUE)
+      })
+    } else {
       command = file.path('utils','choose_dir.bat')
       args = if (is.na(caption)) '' else sprintf('"%s"', caption)
       suppressWarnings({
         path = system2(command, args = args, stdout = TRUE)
       })
+    }  
       if (path == 'NONE') path = NA
       return(path)
   }
