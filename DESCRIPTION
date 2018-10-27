@@ -3,6 +3,6 @@ Title: A widget for interactive selection of directories for R Shiny Application
 Description: Provides an input for users to select directories via an interactive, and os native dialog, rather than having to type in paths in a textInput().
 Version: 0.1.0
 Author: W. Lee Pang and Sigurdur Smarason
-Maintainer: W. Lee Pang
+Maintainer: W. Lee Pang  <wleepang@somewhere.org>
 License: BSD 3-Clause License
 RoxygenNote: 6.1.0

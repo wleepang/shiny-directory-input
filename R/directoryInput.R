@@ -1,10 +1,13 @@
-#' Choose a Folder Interactively
+#' @name choose.dir
+#' 
+#' @title Choose a Folder Interactively
 #'
 #' Display an OS-native folder selection dialog under Mac OS X, Linux GTK+ or
 #' Windows.
 #'
 #' @param default which folder to show initially
 #' @param caption the caption on the selection dialog
+#' @param useNew boolean, selects the type of dialog shown in windows
 #'
 #' @details
 #' Uses an Apple Script, Zenity or Windows Batch script to display an OS-native
@@ -14,106 +17,152 @@
 #' is determined by default behavior of the "choose folder" script. Otherwise,
 #' paths are expanded with \link{path.expand}.
 #'
-#' For Windows Batch script the initial folder is always ignored.
+#' For Linux, with \code{default = NA}, the initial folder selection is
+#' determined by defaul behavior of the zenity script.
+#' 
+#' The new windows batch script allows both initial folder and caption to be set.
+#' In the old batch script for Windows the initial folder is always ignored.
 #'
 #' @return
 #' A length one character vector, character NA if 'Cancel' was selected.
 #'
-if (Sys.info()['sysname'] == 'Darwin') {
-  choose.dir = function(default = NA, caption = NA) {
-    command = 'osascript'
-    args = '-e "POSIX path of (choose folder{{prompt}}{{default}})"'
-
-    if (!is.null(caption) && !is.na(caption) && nzchar(caption)) {
-      prompt = sprintf(' with prompt \\"%s\\"', caption)
-    } else {
-      prompt = ''
-    }
-    args = sub('{{prompt}}', prompt, args, fixed = T)
-
-    if (!is.null(default) && !is.na(default) && nzchar(default)) {
-      default = sprintf(' default location \\"%s\\"', path.expand(default))
-    } else {
-      default = ''
-    }
-    args = sub('{{default}}', default, args, fixed = T)
-
-    suppressWarnings({
-      path = system2(command, args = args, stderr = TRUE)
-    })
-    if (!is.null(attr(path, 'status')) && attr(path, 'status')) {
-      # user canceled
-      path = NA
-    } else {
-      # cut any extra output lines, like "Class FIFinderSyncExtensionHost ..."
-      path = tail(path, n=1)
-    }
-
-    return(path)
+#' @export
+#' 
+choose.dir = function(default = NA, caption = NA, useNew=TRUE) {
+  if (Sys.info()['sysname'] == 'Darwin') {
+    return(choose.dir.darwin(default = default, caption = caption))
+  } else if (Sys.info()['sysname'] == 'Linux') {
+    return(choose.dir.linux(default = default, caption = caption))
+  } else if (Sys.info()['sysname'] == 'Windows') {
+    # Use batch script to circumvent issue w/ `choose.dir`/`tcltk::tk_choose.dir`
+    # window popping out unnoticed in the back of the current window
+    return(choose.dir.windows(default = default, caption = caption, useNew = useNew))
   }
-} else if (Sys.info()['sysname'] == 'Linux') {
-  choose.dir = function(default = NA, caption = NA) {
-    command = 'zenity'
-    args = '--file-selection --directory'
-
-    if (!is.null(default) && !is.na(default) && nzchar(default)) {
-      args = paste(args, sprintf('--default="%s"', default))
-    }
-
-    if (!is.null(caption) && !is.na(caption) && nzchar(caption)) {
-      args = paste(args, sprintf('--title="%s"', caption))
-    }
-
-    suppressWarnings({
-      path = system2(command, args = args, stderr = TRUE)
-    })
-
-    #Return NA if user hits cancel
-    if (!is.null(attr(path, 'status')) && attr(path, 'status')) {
-      # user canceled
-      return(NA)
-    }
-
-    #Error: Gtk-Message: GtkDialog mapped without a transient parent
-    if(length(path) > 1){
-      path = path[(length(path)-1)]
-    }
-
-    return(path)
-  }
-} else if (Sys.info()['sysname'] == 'Windows') {
-  # Use batch script to circumvent issue w/ `choose.dir`/`tcltk::tk_choose.dir`
-  # window popping out unnoticed in the back of the current window
-  choose.dir = function(default = NA, caption = NA, useNew = TRUE) {
-    if(useNew){
-      ## uses a powershell script rather than the bat version, gives a nicer interface
-      ## and allows setting of the default directory and the caption
-      command = 'powershell'
-      args = paste('-NoProfile -ExecutionPolicy Bypass -File',file.path('utils','newFolderDialog.ps1'))
-      if (!is.null(default) && !is.na(default) && nzchar(default)) {
-        args = paste(args, sprintf('-default "%s"', normalizePath(default)))
-      }
-
-      if (!is.null(caption) && !is.na(caption) && nzchar(caption)) {
-        args = paste(args, sprintf('-caption "%s"', caption))
-      }
-      
-      suppressWarnings({
-        path = system2(command, args = args, stdout = TRUE)
-      })
-    } else {
-      command = file.path('utils','choose_dir.bat')
-      args = if (is.na(caption)) '' else sprintf('"%s"', caption)
-      suppressWarnings({
-        path = system2(command, args = args, stdout = TRUE)
-      })
-    }  
-      if (path == 'NONE') path = NA
-      return(path)
-  }
+  return(paste("Error: don't know how to show a folder dialog in", Sys.info()['sysname']) )
 }
 
-#' Directory Selection Control
+#' @name choose.dir.darwin
+#' 
+#' @title The apple version of the choose folder
+#' 
+#' @seealso \link{\code{choose.dir}}
+#' 
+#' @return 
+#' A length one character vector, character NA if 'Cancel' was selected.
+#' 
+choose.dir.darwin <- function(default = NA, caption = NA) {
+  command = 'osascript'
+  args = '-e "POSIX path of (choose folder{{prompt}}{{default}})"'
+  
+  if (!is.null(caption) && !is.na(caption) && nzchar(caption)) {
+    prompt = sprintf(' with prompt \\"%s\\"', caption)
+  } else {
+    prompt = ''
+  }
+  args = sub('{{prompt}}', prompt, args, fixed = T)
+  
+  if (!is.null(default) && !is.na(default) && nzchar(default)) {
+    default = sprintf(' default location \\"%s\\"', path.expand(default))
+  } else {
+    default = ''
+  }
+  args = sub('{{default}}', default, args, fixed = T)
+  
+  suppressWarnings({
+    path = system2(command, args = args, stderr = TRUE)
+  })
+  if (!is.null(attr(path, 'status')) && attr(path, 'status')) {
+    # user canceled
+    path = NA
+  } else {
+    # cut any extra output lines, like "Class FIFinderSyncExtensionHost ..."
+    path = tail(path, n=1)
+  }
+  
+  return(path)
+}
+
+
+#' @name choose.dir.linux
+#' 
+#' @title The linux version of the choose folder
+#' 
+#' @seealso \link{\code{choose.dir}}
+#' 
+#' @return 
+#' A length one character vector, character NA if 'Cancel' was selected.
+#' 
+choose.dir.linux <- function(default = NA, caption = NA) {
+  command = 'zenity'
+  args = '--file-selection --directory'
+  
+  if (!is.null(default) && !is.na(default) && nzchar(default)) {
+    args = paste(args, sprintf('--default="%s"', default))
+  }
+  
+  if (!is.null(caption) && !is.na(caption) && nzchar(caption)) {
+    args = paste(args, sprintf('--title="%s"', caption))
+  }
+  
+  suppressWarnings({
+    path = system2(command, args = args, stderr = TRUE)
+  })
+  
+  #Return NA if user hits cancel
+  if (!is.null(attr(path, 'status')) && attr(path, 'status')) {
+    # user canceled
+    return(NA)
+  }
+  
+  #Error: Gtk-Message: GtkDialog mapped without a transient parent
+  if(length(path) > 1){
+    path = path[(length(path)-1)]
+  }
+  
+  return(path)
+}
+
+#' @name choose.dir.linux
+#' 
+#' @title The windows version of the choose folder
+#' 
+#' @seealso \link{\code{choose.dir}}
+#' 
+#' @return 
+#' A length one character vector, character NA if 'Cancel' was selected.
+#'
+choose.dir.windows <- function(default = NA, caption = NA, useNew = TRUE) {
+  if(useNew){
+    ## uses a powershell script rather than the bat version, gives a nicer interface
+    ## and allows setting of the default directory and the caption
+    command = 'powershell'
+    args = paste('-NoProfile -ExecutionPolicy Bypass -File',file.path('utils','newFolderDialog.ps1'))
+    if (!is.null(default) && !is.na(default) && nzchar(default)) {
+      args = paste(args, sprintf('-default "%s"', normalizePath(default)))
+    }
+    
+    if (!is.null(caption) && !is.na(caption) && nzchar(caption)) {
+      args = paste(args, sprintf('-caption "%s"', caption))
+    }
+    
+    suppressWarnings({
+      path = system2(command, args = args, stdout = TRUE)
+    })
+  } else {
+    command = file.path('utils','choose_dir.bat')
+    args = if (is.na(caption)) '' else sprintf('"%s"', caption)
+    suppressWarnings({
+      path = system2(command, args = args, stdout = TRUE)
+    })
+  }  
+  if (path == 'NONE') path = NA
+  return(path)
+}
+
+
+#' @name directoryInput
+#' 
+#' @title Directory Selection Control
 #'
 #' Create a directory selection control to select a directory on the server
 #'
@@ -133,6 +182,7 @@ if (Sys.info()['sysname'] == 'Darwin') {
 #'
 #' @seealso
 #' \link{updateDirectoryInput}, \link{readDirectoryInput}, \link[utils]{choose.dir}
+#' @export
 directoryInput = function(inputId, label, value = NULL) {
   if (!is.null(value) && !is.na(value)) {
     value = path.expand(value)
@@ -180,7 +230,9 @@ directoryInput = function(inputId, label, value = NULL) {
 
 }
 
-#' Change the value of a directoryInput on the client
+#' @name updateDirectoryInput
+#' 
+#' @title Change the value of a directoryInput on the client
 #'
 #' @param session The \code{session} object passed to function given to \code{shinyServer}.
 #' @param inputId The id of the input object.
@@ -194,6 +246,7 @@ directoryInput = function(inputId, label, value = NULL) {
 #' in the text-field and triggers a client-side change event.  A directory
 #' selection dialog is not displayed.
 #'
+#'@export
 updateDirectoryInput = function(session, inputId, value = NULL, ...) {
   if (is.null(value)) {
     value = choose.dir(...)
@@ -201,7 +254,9 @@ updateDirectoryInput = function(session, inputId, value = NULL, ...) {
   session$sendInputMessage(inputId, list(chosen_dir = value))
 }
 
-#' Read the value of a directoryInput
+#' @name readDirectoryInput
+#' 
+#' @title Read the value of a directoryInput
 #'
 #' @param session The \code{session} object passed to function given to \code{shinyServer}.
 #' @param inputId The id of the input object
@@ -210,6 +265,7 @@ updateDirectoryInput = function(session, inputId, value = NULL, ...) {
 #' Reads the value of the text field associated with a \code{directoryInput}
 #' object that stores the user selected directory path.
 #'
+#'@export
 readDirectoryInput = function(session, inputId) {
   session$input[[sprintf('%s__chosen_dir', inputId)]]
 }

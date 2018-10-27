@@ -2,7 +2,9 @@
 % Please edit documentation in R/directoryInput.R
 \name{directoryInput}
 \alias{directoryInput}
-\title{Directory Selection Control}
+\title{Directory Selection Control
+
+Create a directory selection control to select a directory on the server}
 \usage{
 directoryInput(inputId, label, value = NULL)
 }
@@ -17,6 +19,8 @@ directoryInput(inputId, label, value = NULL)
 A directory input control that can be added to a UI definition.
 }
 \description{
+Directory Selection Control
+
 Create a directory selection control to select a directory on the server
 }
 \details{
