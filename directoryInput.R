@@ -54,7 +54,15 @@ if (Sys.info()['sysname'] == 'Darwin') {
 } else if (Sys.info()['sysname'] == 'Linux') {
   choose.dir = function(default = NA, caption = NA) {
     command = 'zenity'
-    args = '--file-selection --directory --title="Choose a folder"'
+    args = '--file-selection --directory'
+
+    if (!is.null(default) && !is.na(default) && nzchar(default)) {
+      args = paste(args, sprintf('--default="%s"', default))
+    }
+
+    if (!is.null(caption) && !is.na(caption) && nzchar(caption)) {
+      args = paste(args, sprintf('--title="%s"', caption))
+    }
 
     suppressWarnings({
       path = system2(command, args = args, stderr = TRUE)
@@ -63,12 +71,12 @@ if (Sys.info()['sysname'] == 'Darwin') {
     #Return NA if user hits cancel
     if (!is.null(attr(path, 'status')) && attr(path, 'status')) {
       # user canceled
-      return(default)
+      return(NA)
     }
 
     #Error: Gtk-Message: GtkDialog mapped without a transient parent
-    if(length(path) == 2){
-      path = path[2]
+    if(length(path) > 1){
+      path = path[(length(path)-1)]
     }
 
     return(path)
@@ -76,12 +84,30 @@ if (Sys.info()['sysname'] == 'Darwin') {
 } else if (Sys.info()['sysname'] == 'Windows') {
   # Use batch script to circumvent issue w/ `choose.dir`/`tcltk::tk_choose.dir`
   # window popping out unnoticed in the back of the current window
-  choose.dir = function(default = NA, caption = NA) {
+  choose.dir = function(default = NA, caption = NA, useNew = TRUE) {
+    if(useNew){
+      ## uses a powershell script rather than the bat version, gives a nicer interface
+      ## and allows setting of the default directory and the caption
+      command = 'powershell'
+      args = paste('-NoProfile -ExecutionPolicy Bypass -File',file.path('utils','newFolderDialog.ps1'))
+      if (!is.null(default) && !is.na(default) && nzchar(default)) {
+        args = paste(args, sprintf('-default "%s"', normalizePath(default)))
+      }
+
+      if (!is.null(caption) && !is.na(caption) && nzchar(caption)) {
+        args = paste(args, sprintf('-caption "%s"', caption))
+      }
+      
+      suppressWarnings({
+        path = system2(command, args = args, stdout = TRUE)
+      })
+    } else {
       command = file.path('utils','choose_dir.bat')
       args = if (is.na(caption)) '' else sprintf('"%s"', caption)
       suppressWarnings({
         path = system2(command, args = args, stdout = TRUE)
       })
+    }  
       if (path == 'NONE') path = NA
       return(path)
   }
@@ -119,14 +145,14 @@ directoryInput = function(inputId, label, value = NULL) {
       )
     ),
 
-    div(
+    shiny::div(
       class = 'form-group directory-input-container',
       shiny:::`%AND%`(label, tags$label(label)),
-      div(
-        span(
+      shiny::div(
+        shiny::span(
           class = 'col-xs-9 col-md-11',
           style = 'padding-left: 0; padding-right: 5px;',
-          div(
+          shiny::div(
             class = 'input-group shiny-input-container',
             style = 'width:100%;',
             div(class = 'input-group-addon', icon('folder-o')),
@@ -139,7 +165,7 @@ directoryInput = function(inputId, label, value = NULL) {
             )
           )
         ),
-        span(
+        shiny::span(
           class = 'shiny-input-container',
           tags$button(
             id = inputId,
