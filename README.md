@@ -9,27 +9,35 @@ dialog, rather than having to type in paths in a `textInput()`.
 
 > **NOTE**: This is intended to only be used with _locally run_ shiny applications.  It will not work on server deployed applications because it uses OS shell calls to present a directory choosing dialog.  There is currently no way (that I'm aware) of _securely_ presenting a client side directory selection dialog from a hosted web application.
 
-# Run the demo
-Install the `shiny` R-package from CRAN:
+# Install the package
+First install the `shiny` R-package from CRAN as it is required:
 
 ```r
 install.packages('shiny')
 ```
 
-Clone this git repository, navigate to where the `ui.R` and `server.R` files are
-located and run:
+Then install this package from github:
 
 ```r
-shiny::runApp()
+devtools::install_github('wleepang/shiny-directory-input')
+```
+
+
+# Run the demo
+
+Simply run the code to see the widget in action:
+
+```r
+library(shinyDirectoryInput)
+shinyDirectoryInput::runExample()
 ```
 
 # Use the widget
-1. Copy the folder `www/js` to your app
-2. Copy `directoryInput.R` to your app
-3. In `global.R` (create it if it doesn't already exist) add the line:
+
+In `global.R` in your own app (create it if it doesn't already exist) add the line:
 
 ```r
-source('directoryInput.R')
+library('shinyDirectoryInput')
 ```
 
 ### In `ui.R`:
