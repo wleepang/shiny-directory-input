@@ -192,7 +192,7 @@ directoryInput = function(inputId, label, value = NULL) {
   tagList(
     singleton(
       tags$head(
-        tags$script(src = file.path(whereisjs, 'directory_input_binding.js')
+        tags$script(src = file.path(whereisjs, 'directory_input_binding.js'))
       )
     ),
 
