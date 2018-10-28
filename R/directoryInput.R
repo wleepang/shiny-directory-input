@@ -135,9 +135,9 @@ choose.dir.windows <- function(default = NA, caption = NA, useNew = TRUE) {
   if(useNew){
     ## uses a powershell script rather than the bat version, gives a nicer interface
     ## and allows setting of the default directory and the caption
-    whereisutils <- system.file("utils", package = "shinyDirectoryInput")
+    whereisutils <- system.file("utils", 'newFolderDialog.ps1', package = "shinyDirectoryInput")
     command = 'powershell'
-    args = paste('-NoProfile -ExecutionPolicy Bypass -File',file.path(whereisutils, 'newFolderDialog.ps1'))
+    args = paste('-NoProfile -ExecutionPolicy Bypass -File',normalizePath(whereisutils))
     if (!is.null(default) && !is.na(default) && nzchar(default)) {
       args = paste(args, sprintf('-default "%s"', normalizePath(default)))
     }
@@ -150,7 +150,8 @@ choose.dir.windows <- function(default = NA, caption = NA, useNew = TRUE) {
       path = system2(command, args = args, stdout = TRUE)
     })
   } else {
-    command = file.path(whereisutils,'choose_dir.bat')
+    whereisutils <- system.file("utils", 'choose_dir.bat', package = "shinyDirectoryInput")
+    command = normalizePath(whereisutils)
     args = if (is.na(caption)) '' else sprintf('"%s"', caption)
     suppressWarnings({
       path = system2(command, args = args, stdout = TRUE)
@@ -188,11 +189,11 @@ directoryInput = function(inputId, label, value = NULL) {
   if (!is.null(value) && !is.na(value)) {
     value = path.expand(value)
   }
-  whereisjs <- system.file("www", "js", package = "shinyDirectoryInput")
+  whereisjs <- system.file("www", "js", "directory_input_binding.js", package = "shinyDirectoryInput")
   tagList(
     singleton(
       tags$head(
-        tags$script(src = file.path(whereisjs, 'directory_input_binding.js'))
+        tags$script(src = normalizePath(whereisjs))
       )
     ),
 
