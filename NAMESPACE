@@ -3,5 +3,5 @@
 export(choose.dir)
 export(directoryInput)
 export(readDirectoryInput)
-export(runExample)
+export(runDirinputExample)
 export(updateDirectoryInput)
