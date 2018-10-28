@@ -194,7 +194,7 @@ directoryInput = function(inputId, label, value = NULL) {
   version <- as.character(packageVersion("shinyDirectoryInput")[[1]])
   dep <- htmltools::htmlDependency(
     name = "shinyDirectoryInput-assets", version = version,
-    package = "shinyDirectoryInput"
+    package = "shinyDirectoryInput",
     src = "assets",
     script = "js/directory_input_binding.js"
   )
