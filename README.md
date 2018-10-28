@@ -29,7 +29,7 @@ Simply run the code to see the widget in action:
 
 ```r
 library(shinyDirectoryInput)
-shinyDirectoryInput::runExample()
+shinyDirectoryInput::runDirinputExample()
 ```
 
 # Use the widget
