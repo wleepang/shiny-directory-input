@@ -15,7 +15,7 @@
 #'
 #' For Apple Script, with \code{default = NA}, the initial folder selection
 #' is determined by default behavior of the "choose folder" script. Otherwise,
-#' paths are expanded with \link{path.expand}.
+#' paths are expanded with \code{\link{path.expand}}.
 #'
 #' For Linux, with \code{default = NA}, the initial folder selection is
 #' determined by defaul behavior of the zenity script.
@@ -45,7 +45,7 @@ choose.dir = function(default = NA, caption = NA, useNew=TRUE) {
 #' 
 #' @title The apple version of the choose folder
 #' 
-#' @seealso \link{\code{choose.dir}}
+#' @seealso \code{\link{choose.dir}}
 #' 
 #' @return 
 #' A length one character vector, character NA if 'Cancel' was selected.
@@ -87,7 +87,7 @@ choose.dir.darwin <- function(default = NA, caption = NA) {
 #' 
 #' @title The linux version of the choose folder
 #' 
-#' @seealso \link{\code{choose.dir}}
+#' @seealso \code{\link{choose.dir}}
 #' 
 #' @return 
 #' A length one character vector, character NA if 'Cancel' was selected.
@@ -126,7 +126,7 @@ choose.dir.linux <- function(default = NA, caption = NA) {
 #' 
 #' @title The windows version of the choose folder
 #' 
-#' @seealso \link{\code{choose.dir}}
+#' @seealso \code{\link{choose.dir}}
 #' 
 #' @return 
 #' A length one character vector, character NA if 'Cancel' was selected.
@@ -172,7 +172,7 @@ choose.dir.windows <- function(default = NA, caption = NA, useNew = TRUE) {
 #' @param value Initial value.  Paths are exapnded via \code{\link{path.expand}}.
 #'
 #' @details
-#' This widget relies on \link{\code{choose.dir}} to present an interactive
+#' This widget relies on \code{\link{choose.dir}} to present an interactive
 #' dialog to users for selecting a directory on the local filesystem.  Therefore,
 #' this widget is intended for shiny apps that are run locally - i.e. on the
 #' same system that files/directories are to be accessed - and not from hosted
@@ -182,7 +182,7 @@ choose.dir.windows <- function(default = NA, caption = NA, useNew = TRUE) {
 #' A directory input control that can be added to a UI definition.
 #'
 #' @seealso
-#' \link{updateDirectoryInput}, \link{readDirectoryInput}, \link[utils]{choose.dir}
+#' \code{\link{updateDirectoryInput}}, \code{\link{readDirectoryInput}}, \code{\link{choose.dir}}
 #' @export
 directoryInput = function(inputId, label, value = NULL) {
   if (!is.null(value) && !is.na(value)) {
@@ -238,7 +238,7 @@ directoryInput = function(inputId, label, value = NULL) {
 #' @param session The \code{session} object passed to function given to \code{shinyServer}.
 #' @param inputId The id of the input object.
 #' @param value A directory path to set
-#' @param ... Additional arguments passed to \link{\code{choose.dir}}.  Only used
+#' @param ... Additional arguments passed to \code{\link{choose.dir}}.  Only used
 #'    if \code{value} is \code{NULL}.
 #'
 #' @details
