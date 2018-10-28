@@ -189,7 +189,7 @@ directoryInput = function(inputId, label, value = NULL) {
   if (!is.null(value) && !is.na(value)) {
     value = path.expand(value)
   }
-  whereisjs <- system.file("www", "js", package = "shinyDirectoryInput")
+  whereisjs <- system.file("inst", "www", "js", package = "shinyDirectoryInput")
   print(whereisjs)
   tagList(
     singleton(
