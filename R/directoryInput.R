@@ -194,7 +194,7 @@ directoryInput = function(inputId, label, value = NULL) {
   tagList(
     singleton(
       tags$head(
-        tags$script(src = normalizePath(whereisjs))
+        tags$script(src = whereisjs)
       )
     ),
 
