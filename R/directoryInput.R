@@ -135,8 +135,7 @@ choose.dir.windows <- function(default = NA, caption = NA, useNew = TRUE) {
   if(useNew){
     ## uses a powershell script rather than the bat version, gives a nicer interface
     ## and allows setting of the default directory and the caption
-    whereisutils <- system.file("inst", "utils", package = "shinyDirectoryInput")
-    print(whereisutils)
+    whereisutils <- system.file("utils", package = "shinyDirectoryInput")
     command = 'powershell'
     args = paste('-NoProfile -ExecutionPolicy Bypass -File',file.path(whereisutils, 'newFolderDialog.ps1'))
     if (!is.null(default) && !is.na(default) && nzchar(default)) {
@@ -189,8 +188,7 @@ directoryInput = function(inputId, label, value = NULL) {
   if (!is.null(value) && !is.na(value)) {
     value = path.expand(value)
   }
-  whereisjs <- system.file("inst", "www", "js", package = "shinyDirectoryInput")
-  print(whereisjs)
+  whereisjs <- system.file("www", "js", package = "shinyDirectoryInput")
   tagList(
     singleton(
       tags$head(
