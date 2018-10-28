@@ -195,7 +195,7 @@ directoryInput = function(inputId, label, value = NULL) {
   dep <- htmltools::htmlDependency(
     name = "shinyDirectoryInput-assets", version = version,
     package = "shinyDirectoryInput"
-    src = "www",
+    src = "assets",
     script = "js/directory_input_binding.js"
   )
   tagList(
