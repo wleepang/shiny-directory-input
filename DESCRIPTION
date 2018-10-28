@@ -2,7 +2,7 @@ Package: shinyDirectoryInput
 Title: A widget for interactive selection of directories for R Shiny Applications
 Version: 0.2.0
 Author: W. Lee Pang and Sigurdur Smarason
-Maintainer: W. Lee Pang  <wleepang@somewhere.org>
+Maintainer: Sigurdur Smarason  <runningman69@gmail.com>
 License: BSD 3-Clause License
 Depends:
     shiny

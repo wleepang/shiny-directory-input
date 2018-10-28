@@ -19,7 +19,7 @@ install.packages('shiny')
 Then install this package from github:
 
 ```r
-devtools::install_github('wleepang/shiny-directory-input')
+devtools::install_github('SiggiSmara/shiny-directory-input', ref="package")
 ```
 
 
