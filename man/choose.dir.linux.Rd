@@ -20,7 +20,7 @@ The linux version of the choose folder
 The windows version of the choose folder
 }
 \seealso{
-\link{\code{choose.dir}}
+\code{\link{choose.dir}}
 
-\link{\code{choose.dir}}
+\code{\link{choose.dir}}
 }

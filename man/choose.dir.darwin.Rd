@@ -13,5 +13,5 @@ A length one character vector, character NA if 'Cancel' was selected.
 The apple version of the choose folder
 }
 \seealso{
-\link{\code{choose.dir}}
+\code{\link{choose.dir}}
 }

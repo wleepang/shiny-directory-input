@@ -24,12 +24,12 @@ Directory Selection Control
 Create a directory selection control to select a directory on the server
 }
 \details{
-This widget relies on \link{\code{choose.dir}} to present an interactive
+This widget relies on \code{\link{choose.dir}} to present an interactive
 dialog to users for selecting a directory on the local filesystem.  Therefore,
 this widget is intended for shiny apps that are run locally - i.e. on the
 same system that files/directories are to be accessed - and not from hosted
 applications (e.g. from shinyapps.io).
 }
 \seealso{
-\link{updateDirectoryInput}, \link{readDirectoryInput}, \link[utils]{choose.dir}
+\code{\link{updateDirectoryInput}}, \code{\link{readDirectoryInput}}, \code{\link{choose.dir}}
 }

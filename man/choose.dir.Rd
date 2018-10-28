@@ -31,7 +31,7 @@ folder selection dialog.
 
 For Apple Script, with \code{default = NA}, the initial folder selection
 is determined by default behavior of the "choose folder" script. Otherwise,
-paths are expanded with \link{path.expand}.
+paths are expanded with \code{\link{path.expand}}.
 
 For Linux, with \code{default = NA}, the initial folder selection is
 determined by defaul behavior of the zenity script.
