@@ -186,18 +186,19 @@ choose.dir.windows <- function(default = NA, caption = NA, useNew = TRUE) {
 #' @seealso
 #' \code{\link{updateDirectoryInput}}, \code{\link{readDirectoryInput}}, \code{\link{choose.dir}}
 #' @export
+#' 
 directoryInput = function(inputId, label, value = NULL) {
   if (!is.null(value) && !is.na(value)) {
     value = path.expand(value)
   }
-  whereisjs <- system.file("www", "js", "directory_input_binding.js", package = "shinyDirectoryInput")
+  version <- as.character(packageVersion("shinyDirectoryInput")[[1]])
+  dep <- htmltools::htmlDependency(
+    name = "shinyDirectoryInput-assets", version = version,
+    package = "shinyDirectoryInput"
+    src = "www",
+    script = "js/directory_input_binding.js"
+  )
   tagList(
-    singleton(
-      tags$head(
-        tags$script(src = whereisjs)
-      )
-    ),
-
     shiny::div(
       class = 'form-group directory-input-container',
       shiny:::`%AND%`(label, tags$label(label)),
@@ -227,11 +228,58 @@ directoryInput = function(inputId, label, value = NULL) {
           )
         )
       )
-    )
-
+    ),
+    dep
   )
 
 }
+
+# directoryInput = function(inputId, label, value = NULL) {
+#   if (!is.null(value) && !is.na(value)) {
+#     value = path.expand(value)
+#   }
+#   whereisjs <- system.file("www", "js", "directory_input_binding.js", package = "shinyDirectoryInput")
+#   tagList(
+#     singleton(
+#       tags$head(
+#         tags$script(src = whereisjs)
+#       )
+#     ),
+# 
+#     shiny::div(
+#       class = 'form-group directory-input-container',
+#       shiny:::`%AND%`(label, tags$label(label)),
+#       shiny::div(
+#         shiny::span(
+#           class = 'col-xs-9 col-md-11',
+#           style = 'padding-left: 0; padding-right: 5px;',
+#           shiny::div(
+#             class = 'input-group shiny-input-container',
+#             style = 'width:100%;',
+#             div(class = 'input-group-addon', icon('folder-o')),
+#             tags$input(
+#               id = sprintf('%s__chosen_dir', inputId),
+#               value = value,
+#               type = 'text',
+#               class = 'form-control directory-input-chosen-dir',
+#               readonly = 'readonly'
+#             )
+#           )
+#         ),
+#         shiny::span(
+#           class = 'shiny-input-container',
+#           tags$button(
+#             id = inputId,
+#             class = 'btn btn-default directory-input',
+#             '...'
+#           )
+#         )
+#       )
+#     )
+# 
+#   )
+# 
+# }
 
 #' @name updateDirectoryInput
 #' 
