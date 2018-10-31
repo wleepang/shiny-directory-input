@@ -76,7 +76,7 @@ if (Sys.info()['sysname'] == 'Darwin') {
 
     #Error: Gtk-Message: GtkDialog mapped without a transient parent
     if(length(path) > 1){
-      path = path[(length(path)-1)]
+      path = path[(length(path))]
     }
 
     return(path)
