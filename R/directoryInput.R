@@ -104,10 +104,10 @@ choose.dir.linux <- function(default = NA, caption = NA) {
     args = paste(args, sprintf('--title="%s"', caption))
   }
   
-  suppressWarnings({
+  #suppressWarnings({
     path = system2(command, args = args, stderr = TRUE)
-  })
-  print("got here")
+  #})
+  
   #Return NA if user hits cancel
   if (!is.null(attr(path, 'status')) && attr(path, 'status')) {
     # user canceled
