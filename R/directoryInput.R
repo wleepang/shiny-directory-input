@@ -32,6 +32,7 @@ choose.dir = function(default = NA, caption = NA, useNew=TRUE) {
   if (Sys.info()['sysname'] == 'Darwin') {
     return(choose.dir.darwin(default = default, caption = caption))
   } else if (Sys.info()['sysname'] == 'Linux') {
+    print("got here")
     return(choose.dir.linux(default = default, caption = caption))
   } else if (Sys.info()['sysname'] == 'Windows') {
     # Use batch script to circumvent issue w/ `choose.dir`/`tcltk::tk_choose.dir`
