@@ -2,9 +2,7 @@
 % Please edit documentation in R/directoryInput.R
 \name{directoryInput}
 \alias{directoryInput}
-\title{Directory Selection Control
-
-Create a directory selection control to select a directory on the server}
+\title{Directory Selection Control}
 \usage{
 directoryInput(inputId, label, value = NULL)
 }
@@ -13,15 +11,13 @@ directoryInput(inputId, label, value = NULL)
 
 \item{label}{Display label for the control, or NULL for no label}
 
-\item{value}{Initial value.  Paths are exapnded via \code{\link{path.expand}}.}
+\item{value}{Initial value.  Paths are expanded via \code{\link{path.expand}}.}
 }
 \value{
 A directory input control that can be added to a UI definition.
 }
 \description{
 Directory Selection Control
-
-Create a directory selection control to select a directory on the server
 }
 \details{
 This widget relies on \code{\link{choose.dir}} to present an interactive

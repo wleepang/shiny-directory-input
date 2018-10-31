@@ -2,14 +2,14 @@
 % Please edit documentation in R/runExample.R
 \name{runDirinputExample}
 \alias{runDirinputExample}
-\title{Runs a demo app with the code
-
-See the code in the example_application folder}
+\title{Runs a demo app with the code}
 \usage{
 runDirinputExample()
 }
 \description{
 Runs a demo app with the code
-
-See the code in the example_application folder
+}
+\details{
+Runs a demo app with the code. See the code in the example_application folder for
+how this is accomplished.
 }

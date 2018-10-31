@@ -2,7 +2,9 @@
 #' 
 #' @title Runs a demo app with the code
 #' 
-#' See the code in the example_application folder
+#' @details 
+#' Runs a demo app with the code. See the code in the example_application folder for
+#' how this is accomplished.
 #' 
 #' @export
 runDirinputExample <- function() {

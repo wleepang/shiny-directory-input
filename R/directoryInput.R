@@ -122,7 +122,7 @@ choose.dir.linux <- function(default = NA, caption = NA) {
   return(path)
 }
 
-choose.dir.linux()#' @name choose.dir.linux
+#' @name choose.dir.windows
 #' 
 #' @title The windows version of the choose folder
 #' 
@@ -167,11 +167,9 @@ choose.dir.windows <- function(default = NA, caption = NA, useNew = TRUE) {
 #' 
 #' @title Directory Selection Control
 #'
-#' Create a directory selection control to select a directory on the server
-#'
 #' @param inputId The \code{input} slot that will be used to access the value
 #' @param label Display label for the control, or NULL for no label
-#' @param value Initial value.  Paths are exapnded via \code{\link{path.expand}}.
+#' @param value Initial value.  Paths are expanded via \code{\link{path.expand}}.
 #'
 #' @details
 #' This widget relies on \code{\link{choose.dir}} to present an interactive
