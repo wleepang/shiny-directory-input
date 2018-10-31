@@ -32,7 +32,6 @@ choose.dir = function(default = NA, caption = NA, useNew=TRUE) {
   if (Sys.info()['sysname'] == 'Darwin') {
     return(choose.dir.darwin(default = default, caption = caption))
   } else if (Sys.info()['sysname'] == 'Linux') {
-    print("got here")
     return(choose.dir.linux(default = default, caption = caption))
   } else if (Sys.info()['sysname'] == 'Windows') {
     # Use batch script to circumvent issue w/ `choose.dir`/`tcltk::tk_choose.dir`
@@ -94,6 +93,7 @@ choose.dir.darwin <- function(default = NA, caption = NA) {
 #' A length one character vector, character NA if 'Cancel' was selected.
 #' 
 choose.dir.linux <- function(default = NA, caption = NA) {
+  print("got here")
   command = 'zenity'
   args = '--file-selection --directory'
   
