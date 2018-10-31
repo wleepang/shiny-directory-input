@@ -93,7 +93,6 @@ choose.dir.darwin <- function(default = NA, caption = NA) {
 #' A length one character vector, character NA if 'Cancel' was selected.
 #' 
 choose.dir.linux <- function(default = NA, caption = NA) {
-  print("got here")
   command = 'zenity'
   args = '--file-selection --directory'
   
@@ -108,7 +107,7 @@ choose.dir.linux <- function(default = NA, caption = NA) {
   suppressWarnings({
     path = system2(command, args = args, stderr = TRUE)
   })
-  
+  print("got here")
   #Return NA if user hits cancel
   if (!is.null(attr(path, 'status')) && attr(path, 'status')) {
     # user canceled
