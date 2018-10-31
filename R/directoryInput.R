@@ -97,16 +97,16 @@ choose.dir.linux <- function(default = NA, caption = NA) {
   args = '--file-selection --directory'
   
   if (!is.null(default) && !is.na(default) && nzchar(default)) {
-    args = paste(args, sprintf('--default="%s"', default))
+    args = paste(args, sprintf('--filename=%s', default))
   }
   
   if (!is.null(caption) && !is.na(caption) && nzchar(caption)) {
     args = paste(args, sprintf('--title="%s"', caption))
   }
   
-  #suppressWarnings({
+  suppressWarnings({
     path = system2(command, args = args, stderr = TRUE)
-  #})
+  })
   
   #Return NA if user hits cancel
   if (!is.null(attr(path, 'status')) && attr(path, 'status')) {
@@ -116,13 +116,13 @@ choose.dir.linux <- function(default = NA, caption = NA) {
   
   #Error: Gtk-Message: GtkDialog mapped without a transient parent
   if(length(path) > 1){
-    path = path[(length(path)-1)]
+    path = path[(length(path))]
   }
   
   return(path)
 }
 
-#' @name choose.dir.linux
+choose.dir.linux()#' @name choose.dir.linux
 #' 
 #' @title The windows version of the choose folder
 #' 
