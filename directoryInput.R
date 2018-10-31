@@ -57,7 +57,7 @@ if (Sys.info()['sysname'] == 'Darwin') {
     args = '--file-selection --directory'
 
     if (!is.null(default) && !is.na(default) && nzchar(default)) {
-      args = paste(args, sprintf('--default="%s"', default))
+      args = paste(args, sprintf('--filename="%s"', default))
     }
 
     if (!is.null(caption) && !is.na(caption) && nzchar(caption)) {
