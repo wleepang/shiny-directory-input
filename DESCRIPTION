@@ -1,0 +1,11 @@
+Package: shinyDirectoryInput
+Title: A widget for interactive selection of directories for R Shiny Applications
+Version: 0.2.0
+Encoding: UTF-8
+Author: W. Lee Pang and Sigurdur Smarason
+Maintainer: W. Lee Pang  <wleepang@gmail.com>
+License: BSD 3-Clause License
+Depends:
+    shiny
+Description: Provides an input for users to select directories via an interactive, and os native dialog, rather than having to type in paths in a textInput().
+RoxygenNote: 6.1.0
