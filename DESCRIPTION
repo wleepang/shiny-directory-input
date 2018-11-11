@@ -3,7 +3,7 @@ Title: A widget for interactive selection of directories for R Shiny Application
 Version: 0.2.0
 Encoding: UTF-8
 Author: W. Lee Pang and Sigurdur Smarason
-Maintainer: W. Lee Pang  <WLeePang@somewhere.org>
+Maintainer: W. Lee Pang  <wleepang@gmail.com>
 License: BSD 3-Clause License
 Depends:
     shiny
