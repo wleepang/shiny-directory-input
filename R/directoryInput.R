@@ -146,9 +146,8 @@ choose.dir.windows <- function(default = NA, caption = NA, useNew = TRUE) {
       args = paste(args, sprintf('-caption "%s"', caption))
     }
     
-    path = system2(command, args = args, stdout = TRUE)
     suppressWarnings({
-      
+      path = system2(command, args = args, stdout = TRUE)
     })
   } else {
     whereisutils <- system.file("utils", 'choose_dir.bat', package = "shinyDirectoryInput")
