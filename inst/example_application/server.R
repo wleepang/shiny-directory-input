@@ -1,4 +1,3 @@
-
 # This is the server logic for a Shiny web application.
 # You can find out more about building applications with Shiny here:
 #
@@ -16,7 +15,6 @@ shinyServer(function(input, output, session) {
     handlerExpr = {
       if (input$directory > 0) {
         # condition prevents handler execution on initial app launch
-
         path = choose.dir(default = readDirectoryInput(session, 'directory'),
           caption="Choose a directory...")
         updateDirectoryInput(session, 'directory', value = path)
