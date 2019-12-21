@@ -183,7 +183,7 @@ Add-Type  -ReferencedAssemblies $Assem -TypeDefinition $BuildDialog -ErrorAction
 
 $fsd = New-Object FolderSelect.FolderSelectDialog
     $fsd.Title = $caption;
-    $fsd.InitialDirectory = $default
+    $fsd.InitialDirectory = $default.Trim('"')
     $fsd.ShowDialog() | Out-Null
 
 $fsd.FileName
