@@ -22,6 +22,10 @@ Then install this package from github:
 devtools::install_github('wleepang/shiny-directory-input')
 ```
 
+## Special Requirements
+
+* Windows:
+  * PowerShell 3 or higher
 
 # Run the demo
 
