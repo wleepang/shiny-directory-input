@@ -1,5 +1,5 @@
 #' @name choose.dir
-#' 
+#'
 #' @title Choose a Folder Interactively
 #'
 #' Display an OS-native folder selection dialog under Mac OS X, Linux GTK+ or
@@ -19,7 +19,7 @@
 #'
 #' For Linux, with \code{default = NA}, the initial folder selection is
 #' determined by defaul behavior of the zenity script.
-#' 
+#'
 #' The new windows batch script allows both initial folder and caption to be set.
 #' In the old batch script for Windows the initial folder is always ignored.
 #'
@@ -27,7 +27,7 @@
 #' A length one character vector, character NA if 'Cancel' was selected.
 #'
 #' @export
-#' 
+#'
 choose.dir = function(default = NA, caption = NA, useNew=TRUE) {
   if (Sys.info()['sysname'] == 'Darwin') {
     return(choose.dir.darwin(default = default, caption = caption))
@@ -42,32 +42,32 @@ choose.dir = function(default = NA, caption = NA, useNew=TRUE) {
 }
 
 #' @name choose.dir.darwin
-#' 
+#'
 #' @title The apple version of the choose folder
-#' 
+#'
 #' @seealso \code{\link{choose.dir}}
-#' 
-#' @return 
+#'
+#' @return
 #' A length one character vector, character NA if 'Cancel' was selected.
-#' 
+#'
 choose.dir.darwin <- function(default = NA, caption = NA) {
   command = 'osascript'
   args = '-e "POSIX path of (choose folder{{prompt}}{{default}})"'
-  
+
   if (!is.null(caption) && !is.na(caption) && nzchar(caption)) {
     prompt = sprintf(' with prompt \\"%s\\"', caption)
   } else {
     prompt = ''
   }
   args = sub('{{prompt}}', prompt, args, fixed = T)
-  
+
   if (!is.null(default) && !is.na(default) && nzchar(default)) {
     default = sprintf(' default location \\"%s\\"', path.expand(default))
   } else {
     default = ''
   }
   args = sub('{{default}}', default, args, fixed = T)
-  
+
   suppressWarnings({
     path = system2(command, args = args, stderr = TRUE)
   })
@@ -78,57 +78,57 @@ choose.dir.darwin <- function(default = NA, caption = NA) {
     # cut any extra output lines, like "Class FIFinderSyncExtensionHost ..."
     path = tail(path, n=1)
   }
-  
+
   return(path)
 }
 
 
 #' @name choose.dir.linux
-#' 
+#'
 #' @title The linux version of the choose folder
-#' 
+#'
 #' @seealso \code{\link{choose.dir}}
-#' 
-#' @return 
+#'
+#' @return
 #' A length one character vector, character NA if 'Cancel' was selected.
-#' 
+#'
 choose.dir.linux <- function(default = NA, caption = NA) {
   command = 'zenity'
   args = '--file-selection --directory'
-  
+
   if (!is.null(default) && !is.na(default) && nzchar(default)) {
     args = paste(args, sprintf('--filename="%s"', default))
   }
-  
+
   if (!is.null(caption) && !is.na(caption) && nzchar(caption)) {
     args = paste(args, sprintf('--title="%s"', caption))
   }
-  
+
   suppressWarnings({
     path = system2(command, args = args, stderr = TRUE)
   })
-  
+
   #Return NA if user hits cancel
   if (!is.null(attr(path, 'status')) && attr(path, 'status')) {
     # user canceled
     return(NA)
   }
-  
+
   #Error: Gtk-Message: GtkDialog mapped without a transient parent
   if(length(path) > 1){
     path = path[(length(path))]
   }
-  
+
   return(path)
 }
 
 #' @name choose.dir.windows
-#' 
+#'
 #' @title The windows version of the choose folder
-#' 
+#'
 #' @seealso \code{\link{choose.dir}}
-#' 
-#' @return 
+#'
+#' @return
 #' A length one character vector, character NA if 'Cancel' was selected.
 #'
 choose.dir.windows <- function(default = NA, caption = NA, useNew = TRUE) {
@@ -141,11 +141,11 @@ choose.dir.windows <- function(default = NA, caption = NA, useNew = TRUE) {
     if (!is.null(default) && !is.na(default) && nzchar(default)) {
       args = paste(args, sprintf('-default "%s"', normalizePath(default)))
     }
-    
+
     if (!is.null(caption) && !is.na(caption) && nzchar(caption)) {
       args = paste(args, sprintf('-caption "%s"', caption))
     }
-    
+
     suppressWarnings({
       path = system2(command, args = args, stdout = TRUE)
     })
@@ -156,14 +156,14 @@ choose.dir.windows <- function(default = NA, caption = NA, useNew = TRUE) {
     suppressWarnings({
       path = system2(command, args = args, stdout = TRUE)
     })
-  }  
+  }
   if (path == 'NONE') path = NA
   return(path)
 }
 
 
 #' @name directoryInput
-#' 
+#'
 #' @title Directory Selection Control
 #'
 #' @param inputId The \code{input} slot that will be used to access the value
@@ -183,7 +183,7 @@ choose.dir.windows <- function(default = NA, caption = NA, useNew = TRUE) {
 #' @seealso
 #' \code{\link{updateDirectoryInput}}, \code{\link{readDirectoryInput}}, \code{\link{choose.dir}}
 #' @export
-#' 
+#'
 directoryInput = function(inputId, label, value = NULL) {
   if (!is.null(value) && !is.na(value)) {
     value = path.expand(value)
@@ -198,7 +198,7 @@ directoryInput = function(inputId, label, value = NULL) {
   tagList(
     shiny::div(
       class = 'form-group directory-input-container',
-      shiny:::`%AND%`(label, tags$label(label)),
+      `%AND%`(label, tags$label(label)),
       shiny::div(
         shiny::span(
           class = 'col-xs-9 col-md-11',
@@ -233,7 +233,7 @@ directoryInput = function(inputId, label, value = NULL) {
 
 
 #' @name updateDirectoryInput
-#' 
+#'
 #' @title Change the value of a directoryInput on the client
 #'
 #' @param session The \code{session} object passed to function given to \code{shinyServer}.
@@ -257,7 +257,7 @@ updateDirectoryInput = function(session, inputId, value = NULL, ...) {
 }
 
 #' @name readDirectoryInput
-#' 
+#'
 #' @title Read the value of a directoryInput
 #'
 #' @param session The \code{session} object passed to function given to \code{shinyServer}.
@@ -270,4 +270,12 @@ updateDirectoryInput = function(session, inputId, value = NULL, ...) {
 #'@export
 readDirectoryInput = function(session, inputId) {
   session$input[[sprintf('%s__chosen_dir', inputId)]]
+}
+
+# Shiny's old utility function
+`%AND%` <- function(x, y) {
+  if (!is.null(x) && !isTRUE(is.na(x)))
+    if (!is.null(y) && !isTRUE(is.na(y)))
+      return(y)
+  return(NULL)
 }
